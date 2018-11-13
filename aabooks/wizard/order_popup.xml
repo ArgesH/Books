@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="order_pop_up">
+            <field name="name">orderpopup.form</field>
+            <field name="model">books.orderpopup</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Books">
+                    <group>
+                        <field name="name"/>
+                        <field name="lastname"/>
+                        <field name="address1"/>
+                        <field name="address2"/>
+                        <field name="payment" widget="selection"/>
+                        <field name="email"/>
+                        <field name="city"/>
+                        <field name="country"/>
+                        <field name="postalcode"/>
+                    </group>
+                    <footer>
+                        <button name="confirm2" string="Confirm" type="object"/>
+                        <button name="cancel2" special="cancel" string="Cancel" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_wizard" model="ir.actions.act_window">
+            <field name="name">Order PopUp</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">books.orderpopup</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="order_pop_up"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

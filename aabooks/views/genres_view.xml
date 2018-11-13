@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="genre_form_view" model="ir.ui.view">
+            <field name="name">genre.form</field>
+            <field name="model">books.genre</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Genre">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="genre_tree_view" model="ir.ui.view">
+            <field name="name">genre.tree</field>
+            <field name="model">books.genre</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Genre">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="genre_search_view" model="ir.ui.view">
+            <field name="name">genre.search</field>
+            <field name="model">books.genre</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Genre">
+                        <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_genre_kanban" model="ir.ui.view">
+        <field name="name">Kanban view</field>
+        <field name="model">books.genre</field>
+        <field name="arch" type="xml">
+            <kanban class="o_hr_employee_kanban">
+                <templates>
+                    <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <div class="oe_kanban_details">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>(<field name="count"/>)
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+        </record>
+
+        <record id="action_genre_form" model="ir.actions.act_window">
+            <field name="name">All genres</field>
+            <field name="res_model">books.genre</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="tree_view" ref="genre_tree_view"/>
+        </record>
+        <menuitem name="Genre" id="genre_group_menu" action="action_genre_form" parent="book_group_menu" sequence="2"/>
+    </data>
+</odoo>

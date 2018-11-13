@@ -9,14 +9,16 @@
             <field name="arch" type="xml">
                 <form string="Books">
                     <header>
-                        <button name="order" string="Order" type="object" attrs="{'invisible':['|',('state','=', 'order'),('copies_left','=',0)]}"/>
-                        <button name="deliver" string="Deliver" type="object" attrs="{'invisible':['|','|',('state','=','draft'),('state','=','deliver'),('copies_left','=',0)]}"/>
+                        <button name="order" string="Order" type="object" attrs="{'invisible':['|','|',('state','=', 'order'),('copies_left','&lt;=',0),('state','=', 'deliver')]}"/>
+                        <button name="deliver" string="Deliver" type="object" attrs="{'invisible':['|','|',('state','=','draft'),('state','=','order'),('copies_left','&lt;=',0)]}"/>
+                        <button type="action" name="%(action_view_wizard)d" string="Payment" attrs="{'invisible':['|',('state','=', 'draft'),('state','=', 'deliver')]}"/>
                         <button name="cancel" string="Cancel" type="object" attrs="{'invisible':['|',('state','=','draft'),('state','=','deliver')]}"/>
-                        <field name="state" widget="statusbar" statusbar_visible="order,deliver,cancel"/>
+                        <field name="state" widget="statusbar" statusbar_visible="order,payment,deliver,cancel"/>
                     </header>
                     <group>
                         <field name="name"/>
                         <field name="author"/>
+                        <field name="genre_ids"/>
                         <field name="price"/>
                         <field name="number_of_pages"/>
                         <field name="publishing_house"/>
@@ -24,10 +26,10 @@
                         <field name="copies_left"/>
                         <field name="info"/>
                         <field name="email"/>
-                        <field name="phone"/>
+                        <field name="isbn"/>
                         <field name="delivered"/>
                         <field name="total_price"/>
-                        <field name="out_of_copies" widget="html" attrs="{'invisible':[('copies_left','!=',0)]}"/>
+                        <field name="out_of_copies" widget="html" attrs="{'invisible':['&amp;',('copies_left','!=',0),('copies_left','&gt;',0)]}"/>
                     </group>
                 </form>
             </field>
@@ -40,6 +42,7 @@
                 <tree string="Books">
                     <field name="name"/>
                     <field name="author"/>
+                    <field name="genre_ids"/>
                     <field name="price"/>
                     <field name="number_of_pages"/>
                     <field name="publishing_house"/>
@@ -47,7 +50,7 @@
                     <field name="copies_left"/>
                     <field name="info"/>
                     <field name="email"/>
-                    <field name="phone"/>
+                    <field name="isbn"/>
                     <field name="delivered"/>
                 </tree>
             </field>
@@ -60,6 +63,7 @@
                 <search string="Books">
                         <field name="name"/>
                         <field name="author"/>
+                        <field name="genre_ids"/>
                         <field name="price"/>
                         <field name="number_of_pages"/>
                         <field name="publishing_house"/>
@@ -67,7 +71,7 @@
                         <field name="copies_left"/>
                         <field name="info"/>
                         <field name="email"/>
-                        <field name="phone"/>
+                        <field name="isbn"/>
                         <field name="delivered"/>
                 </search>
             </field>
@@ -88,7 +92,7 @@
                     <t t-name="kanban-box">
                     <div class="oe_kanban_global_click">
                         <div class="o_kanban_image">
-                            <img t-att-src="kanban_image('spital.doktori', 'foto_mesatare')"/>
+                            <img src='/aabooks/static/src/img/newbook.png' style="max-height: 45px;"/>
                         </div>
                         <div class="oe_kanban_details">
                             <div class="o_kanban_record_top">
@@ -100,18 +104,18 @@
                                     </strong>
                                 </div>
                             </div>
-
                             <ul>
-                                <li id="last_login"/>
-                                <li>Title: <field name="name"/></li>
-                                <li>Author: <field name="author"/></li>
-                                <li>Price: <i class="fa fa-money"></i><field name="price"/></li>
-                                <li>Page Number: <i class="fa fa-file-text-o"></i><field name="number_of_pages"/></li>
-                                <li>Publish Year: <i class="fa fa-calendar"></i><field name="publish_year"/></li>
-                                <li>Copies Left: <field name="copies_left"/></li>
-                                <li>Phone: <i class="fa fa-mobile"></i> <field name="phone"/></li>
-                                <li>Email: <i class="fa fa-envelope"></i> <field name="email"/></li>
-                                <li>Delivered: <field name="delivered"/></li>
+                                <li id="data"/>
+                                <li><b>Title: </b><field name="name"/></li>
+                                <li><b>Author: </b><field name="author"/></li>
+                                <li><b>Genre: </b><field name="genre_ids"/></li>
+                                <li><b>Price: </b><i class="fa fa-money"></i><field name="price"/></li>
+                                <li><b>Page Number: </b><i class="fa fa-file-text-o"></i><field name="number_of_pages"/></li>
+                                <li><b>Publish Year: </b><i class="fa fa-calendar"></i><field name="publish_year"/></li>
+                                <li><b>Copies Left: </b><field name="copies_left"/></li>
+                                <li><b>ISBN: </b><field name="isbn"/></li>
+                                <li><b>Email: </b><i class="fa fa-envelope"></i> <field name="email"/></li>
+                                <li><b>Delivered: </b><field name="delivered"/></li>
                             </ul>
                         </div>
                     </div>

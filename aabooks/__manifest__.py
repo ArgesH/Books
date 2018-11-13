@@ -17,6 +17,8 @@
     ],
     'data': [
         'views/books_view.xml',
+        'views/genres_view.xml',
+        'wizard/order_popup.xml',
     ],
     'demo': [
 
