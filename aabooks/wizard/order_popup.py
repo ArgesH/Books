@@ -1,6 +1,4 @@
-from odoo import api, models,fields
-from odoo.exceptions import UserError
-from odoo import exceptions
+from odoo import api, models, fields
 
 
 class OrderPopUp(models.TransientModel):

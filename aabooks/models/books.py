@@ -1,10 +1,5 @@
-import time
-import math
 import re
-from odoo.osv import expression
-from odoo.tools.float_utils import float_round as round
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo import api, fields, models
 
 
@@ -16,16 +11,17 @@ class Books(models.Model):
     author = fields.Char(string='Author', default='Anonymous')
     price = fields.Float(string='Price', required=True)
     number_of_pages = fields.Integer(string='Page number', required=True)
-    publishing_house = fields.Char(string='Publishing House', required=True)
+    publishing_house = fields.Char(string='Publishing House', required=True, default='BookHouse')
     publish_year = fields.Date(string='Publish date')
     info = fields.Text(placeholder='General knowledge')
     email = fields.Char(string='Email')
-    isbn = fields.Integer(string='ISBN')
+    isbn = fields.Char(string='ISBN')
     state = fields.Selection([('draft', 'Draft'), ('order', 'Order'), ('deliver', 'Deliver')], default='draft')
     delivered = fields.Integer(string='Delivered')
     total_price = fields.Integer(string='Earnings')
     copies_left = fields.Integer(string='Copies Left')
     out_of_copies = fields.Text(default='Sorry! We are out of Copies!')
+    color = fields.Integer(string='Color')
 
     @api.one
     def order(self):
@@ -35,7 +31,7 @@ class Books(models.Model):
     def deliver(self):
         self.write({'state': 'draft'})
         self.delivered += 1
-        self.total_price = self.delivered * self.price * 0.8
+        self.total_price = self.total_price + (self.price * 0.8)
         self.copies_left -= 1
 
     @api.one
@@ -49,26 +45,16 @@ class Books(models.Model):
             if match is None:
                 raise ValidationError('Not a valid E-mail ID')
 
-    @api.multi
-    @api.constrains('isbn')
-    def _check_isbn_number(self):
-        for books in self:
-            if books.isbn and len(str(abs(books.isbn))) != 10:
-                raise ValidationError("Number should be with 10 digits")
-
 
 class Genre(models.Model):
     _name = 'books.genre'
 
     name = fields.Char(string='Genre', required=True)
-    count = fields.Integer(string='Number of Movies', compute='_total_count')
+    count = fields.Integer(string='Number of Books', compute='count_number_of_books')
+    book_ids = fields.Many2many('books.books', string='Books', store=True)
 
-    @api.multi
-    def _total_count(self):
-        count_num = 0
+    @api.depends('book_ids')
+    def count_number_of_books(self):
+        """ Count number of books that belong to this genre."""
         for genre in self:
-            if genre.name:
-                ids = self.env['books.books'].search([('genre_ids', '=', genre.name)])
-                if ids:
-                    count_num += 1
-                    genre.count = count_num
+            genre.count = len(genre.book_ids)

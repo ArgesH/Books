@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <menuitem name="Books" id="book_group_menu" action="action_book_form" web_icon="aabooks,static/description/books.png"/>
         <record id="books_form_view" model="ir.ui.view">
             <field name="name">books.form</field>
             <field name="model">books.books</field>
@@ -12,23 +11,23 @@
                         <button name="order" string="Order" type="object" attrs="{'invisible':['|','|',('state','=', 'order'),('copies_left','&lt;=',0),('state','=', 'deliver')]}"/>
                         <button name="deliver" string="Deliver" type="object" attrs="{'invisible':['|','|',('state','=','draft'),('state','=','order'),('copies_left','&lt;=',0)]}"/>
                         <button type="action" name="%(action_view_wizard)d" string="Payment" attrs="{'invisible':['|',('state','=', 'draft'),('state','=', 'deliver')]}"/>
-                        <button name="cancel" string="Cancel" type="object" attrs="{'invisible':['|',('state','=','draft'),('state','=','deliver')]}"/>
+                        <button name="cancel" string="Cancel" type="object" attrs="{'invisible':['|',('state','=','draft')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="order,payment,deliver,cancel"/>
                     </header>
-                    <group>
+                    <group col="4">
                         <field name="name"/>
+                        <field name="email"/>
                         <field name="author"/>
-                        <field name="genre_ids"/>
+                        <field name="publishing_house"/>
                         <field name="price"/>
                         <field name="number_of_pages"/>
-                        <field name="publishing_house"/>
-                        <field name="publish_year"/>
                         <field name="copies_left"/>
-                        <field name="info"/>
-                        <field name="email"/>
-                        <field name="isbn"/>
+                        <field name="publish_year"/>
                         <field name="delivered"/>
+                        <field name="isbn"/>
                         <field name="total_price"/>
+                        <field name="genre_ids"/>
+                        <field name="info"/>
                         <field name="out_of_copies" widget="html" attrs="{'invisible':['&amp;',('copies_left','!=',0),('copies_left','&gt;',0)]}"/>
                     </group>
                 </form>
@@ -109,12 +108,12 @@
                                 <li><b>Title: </b><field name="name"/></li>
                                 <li><b>Author: </b><field name="author"/></li>
                                 <li><b>Genre: </b><field name="genre_ids"/></li>
-                                <li><b>Price: </b><i class="fa fa-money"></i><field name="price"/></li>
-                                <li><b>Page Number: </b><i class="fa fa-file-text-o"></i><field name="number_of_pages"/></li>
-                                <li><b>Publish Year: </b><i class="fa fa-calendar"></i><field name="publish_year"/></li>
+                                <li><b>Price: </b><i class="fa fa-money"><field name="price"/></i></li>
+                                <li><b>Page Number: </b><i class="fa fa-file-text-o"><field name="number_of_pages"/></i></li>
+                                <li><b>Publish Year: </b><i class="fa fa-calendar"><field name="publish_year"/></i></li>
                                 <li><b>Copies Left: </b><field name="copies_left"/></li>
                                 <li><b>ISBN: </b><field name="isbn"/></li>
-                                <li><b>Email: </b><i class="fa fa-envelope"></i> <field name="email"/></li>
+                                <li><b>Email: </b><i class="fa fa-envelope"><field name="email"/></i></li>
                                 <li><b>Delivered: </b><field name="delivered"/></li>
                             </ul>
                         </div>
@@ -124,5 +123,6 @@
             </kanban>
         </field>
         </record>
+        <menuitem name="Books" id="book_group_menu" action="action_book_form" web_icon="aabooks,static/description/books.png"/>
     </data>
 </odoo>
